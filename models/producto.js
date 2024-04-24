@@ -15,6 +15,15 @@ let productoSchema = new mongoose.Schema({
     caducidad: {
         type: Date,
         required: true
+    },
+    mascota: {
+        type: String,
+        required: true,
+        enum: ["gato", "roedores", "aves", "peces", "perro"]
+    },
+    categoria: {
+        type: String,
+        enum: ["seco", "húmedo", "higiene", "snack"]
     }
 });
 
