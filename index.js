@@ -44,7 +44,7 @@ app.post('/productos', (req, res) => {
         ean: req.body.ean, 
         nombre: req.body.nombre,
         caducidad: req.body.caducidad, 
-        mascota: req.body.caducidad, 
+        mascota: req.body.mascota, 
         categoria: req.body.categoria
     });
     nuevoProducto.save().then(resultado => {
@@ -61,7 +61,7 @@ app.put('/productos/:id', (req, res) => {
             ean: req.body.ean, 
             nombre: req.body.nombre,
             caducidad: req.body.caducidad, 
-            mascota: req.body.caducidad, 
+            mascota: req.body.mascota, 
             categoria: req.body.categoria
         }
     }, {new: true}).then(resultado => {
