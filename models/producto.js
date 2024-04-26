@@ -5,7 +5,7 @@ let productoSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        match: /^d{13}$/
+        match: /^\d{13}$/
     },
     nombre: {
         type: String,
