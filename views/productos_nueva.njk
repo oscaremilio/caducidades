@@ -1,0 +1,57 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Productos | Nuevo{% endblock %}
+
+{% block contenido %}
+    {% if errores.general%}
+        <br> <span class="text-danger">{{ errores.general }}</span><br>
+    {% endif %}
+    <h1>Insertar nuevo producto</h1>
+    
+    <form action="/productos" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>EAN de producto:</label>
+                {% if errores.ean %}
+                    <br> <span class="text-danger">{{ errores.ean }}</span><br>
+                {% endif %}
+                <input type="string" class="form-control" name="ean"
+                placeholder="EAN de producto..." value = {{ datos.ean}}>
+        </div>
+        <div class="form-group">
+            <label>Tipo:</label>
+            {% if errores.tipo %}
+                    <br> <span class="text-danger">{{ errores.tipo }}</span><br>
+                {% endif %}
+            <select class="form-control" name="tipo" value = {{ datos.tipo}}>
+                <option selected>- Selecione el tipo de habitación -</option>
+                <option>individual</option>
+                <option>doble</option>
+                <option>familiar</option>
+                <option>suite</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Precio:</label>
+                {% if errores.precio %}
+                    <br> <span class="text-danger">{{ errores.precio }}</span><br>
+                {% endif %}
+                <input type="number" step="0.01" class="form-control" name="precio"
+                placeholder="Precio de la habitación..." value = {{ datos.precio }}>
+        </div>
+        <div class="form-group">
+            <label>Descripción:</label>
+                {% if errores.descripcion %}
+                    <br> <span class="text-danger">{{ errores.descripcion }}</span><br>
+                {% endif %}
+              <textarea class="form-control" name="descripcion" rows="10" cols="50">{{ datos.descripcion}}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Imagen:</label>
+                <input type="file" class="form-control" name="imagen">
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Enviar
+        </button>
+    </form>
+
+{% endblock %}

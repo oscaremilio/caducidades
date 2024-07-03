@@ -1,0 +1,26 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Productos | Listado{% endblock %}
+
+{% block contenido %}
+
+    <h1>Listado de productos</h1>
+    {%if productos.length === 0 %}
+        <p class="text-info">No hay productos en el listado</p>
+    {% endif %}
+    <div class="container">
+        <div class="row">
+        {% for producto in productos %}
+                    <div class="col-lg-4 col-md-6 p-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">EAN: {{ producto.ean }}</h5>
+                                <p class="card-text"> : Nombre: {{ producto.nombre }}</p>
+                                <a href="/productos/{{ producto.ean }}"" class="btn btn-primary">Ver ficha</a>
+                            </div>
+                        </div>
+                    </div>
+        {% endfor %}
+        </div>
+    <div>
+{% endblock %}

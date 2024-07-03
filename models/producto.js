@@ -6,7 +6,7 @@ let productoSchema = new mongoose.Schema({
     // Código EAN de 13 dígitos   
     ean: {
         type: String,
-        required: true,
+        required: [true, "El EAN del producto es obligatorio"],
         trim: true,
         // No siempre serán 13 dígitos, y completaremos con "0" (ceros) delante
         match: /^\d{13}$/  
@@ -14,24 +14,29 @@ let productoSchema = new mongoose.Schema({
     // Nombre del artículo
     nombre: {
         type: String,
-        required: true,
+        required: [true, "El nombre del producto es obligatorio"],
         trim: true
     },
     // Mes y año que caduca el artículo
     caducidad: {
         type: Date,
-        required: true
+        required: [true, "La fecha del producto es obligatoria"],
     },
     // Tipo de animal al que va dirigido el artículo
     mascota: {
         type: String,
-        required: true,
+        required: [true, "Es necesario indicar el tipo de mascota"],
         enum: ["gato", "roedores", "aves", "peces", "perro"]
     },
     // Categoría de comida del artículo
     categoria: {
         type: String,
+        required: [true, "Es necesario indicar la categoría del producto"],
         enum: ["seco", "húmedo", "higiene", "snack"]
+    },
+    imagen: {
+        type: String,
+        trim: true
     }
 });
 

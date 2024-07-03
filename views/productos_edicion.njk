@@ -1,0 +1,102 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Productos | Edición{% endblock %}
+
+{% block contenido %}
+    {% if errores.general%}
+        <br> <span class="text-danger">{{ errores.general }}</span><br>
+    {% endif %}
+    <h1>Modificar producto {{ producto.ean}}</h1>
+    
+    <form action="/producto/editar/{{ producto._id }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>EAN de producto:</label>
+                {% if errores.ean %}
+                    <br> <span class="text-danger">{{ errores.ean }}</span><br>
+                {% endif %}
+                <input type="number" class="form-control" name="ean"
+                placeholder="EAN del producto..." value = {{ producto.ean}}>
+        </div>
+        <div class="form-group">
+            <label>Mascota:</label>
+            {% if errores.mascota %}
+                    <br> <span class="text-danger">{{ errores.mascota }}</span><br>
+                {% endif %}
+            <select class="form-control" name="mascota">
+                <option value="">- Selecione el tipo de mascota -</option>
+                <option value="gato" 
+                    {% if (producto.mascota) === "gato" %}
+                        selected
+                    {% endif %}>gato</option>
+                <option value="roedores"
+                    {% if (producto.mascota) === "roedores" %}
+                        selected
+                    {% endif %}>roedores</option>
+                <option value="aves"
+                    {% if (producto.mascota) === "aves" %}
+                        selected
+                    {% endif %}>aves</option>
+                <option value="peces"
+                    {% if (producto.mascota) === "peces" %}
+                        selected
+                    {% endif %}>peces</option>
+                    <option value="perro"
+                    {% if (producto.mascota) === "perro" %}
+                        selected
+                    {% endif %}>perro</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Categoria:</label>
+            {% if errores.categoria %}
+                    <br> <span class="text-danger">{{ errores.categoria }}</span><br>
+                {% endif %}
+            <select class="form-control" name="categoria">
+                <option value="">- Selecione la categoria de comida -</option>
+                <option value="seco" 
+                    {% if (producto.categoria) === "seco" %}
+                        selected
+                    {% endif %}>seco</option>
+                <option value="húmedo"
+                    {% if (producto.categoria) === "húmedo" %}
+                        selected
+                    {% endif %}>húmedo</option>
+                <option value="higiene"
+                    {% if (producto.categoria) === "higiene" %}
+                        selected
+                    {% endif %}>higiene</option>
+                <option value="snack"
+                    {% if (producto.categoria) === "snack" %}
+                        selected
+                    {% endif %}>snack</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Fecha de caducidad:</label>
+            {% if errores.caducidad %}
+                <br> <span class="text-danger">{{ errores.caducidad }}</span><br>
+            {% endif %}
+            <input type="date" class="form-control" name="caducidad" value="{{ producto.caducidad | date('YYYY-MM-DD') }}" required>
+        </div>
+        <div class="form-group">
+            <label>Nombre:</label>
+                {% if errores.nombre %}
+                    <br> <span class="text-danger">{{ errores.nombre }}</span><br>
+                {% endif %}
+                <textarea class="form-control" name="nombre" rows="10" cols="50">{{ producto.nombre}}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Imagen:</label>
+                {% if producto.imagen %}
+                    <div>
+                        <img src="/uploads/productos/{{ producto.imagen }}" alt="Imagen del producto {{ producto.ean }}" width="220" height="140">
+                    </div>
+                {% endif %}
+                <input type="file" class="form-control" name="imagen">
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Enviar
+        </button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Habitaciones | Ficha{% endblock %}
+
+{% block contenido %}
+
+    <h1>Ficha de habitación {{ habitacion.numero }}</h1>
+    {% if habitacion.imagen %}
+        <div class="text-center">
+            <img src="/uploads/habitaciones/{{ habitacion.imagen }}" class="img-fluid" alt="Imagen de la habitación {{ habitacion.numero }}" width="320" height="240">
+        </div>
+        {% endif %}
+    <p>Tipo: {{ habitacion.tipo }} - <strong>Precio: {{ habitacion.precio }} €/noche</strong></p>
+    <p> {{ habitacion.descripcion }}</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 p-1">
+    <form action="/habitaciones/{{ habitacion._id}}" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <button type="submit" class="btn btn-danger">
+            Borrar habitación
+        </button>
+    </form>
+    </div>
+    <div class="col-md-6 p-1">
+    <form action="/habitaciones/editar/{{ habitacion._id }}" method="get">
+        <input type="hidden" name="_method">
+        <button type="submit" class="btn btn-warning">
+            Editar habitación
+        </button>
+    </form>
+    </div>
+    </div>
+    </div>
+    <h2>Incidencias</h2>
+   <form action="/habitaciones/{{ habitacion._id }}/incidencias" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Descripción:</label>
+                {% if errores.descripcion %}
+                    <br> <span class="text-danger">{{ errores.descripcion }}</span><br>
+                {% endif %}
+                <input type="text" class="form-control" name="descripcionIncidencia" value="{{ datos.descripcionIncidencia }}" required/>
+            </div>
+        <div class="form-group">
+            <label>Imagen:</label>
+                <input type="file" class="form-control" name="imagen">
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Enviar
+        </button>
+    </form>
+    {% if habitacion.incidencias and habitacion.incidencias.length > 0 %}
+        <h4>Listado de incidencias</h4>
+        {% for incidencia in habitacion.incidencias %}
+            <div class=card" style="width: 100%;">
+                <div class="shadow-sm border rounded mb-1">
+                    <p> ({{ incidencia.fechaInicio | date("DD/MM/YYYY") }}</p>
+                    
+                    {% if incidencia.imagen %}
+                        <div class="text-center">
+                            <img src="/uploads/incidencias/{{ incidencia.imagen }}" class="img-fluid" alt="Imagen de la incidencia" width="320" height="240">
+                        </div>
+                    {% endif %}
+                    <p> {{ incidencia.descripcion }}</p>
+                    {% if incidencia.fechaFin %}
+                        <p class="text-success">Cerrada el {{ incidencia.fechaFin | date("DD/MM/YYYY") }}</p>
+                    {% else %}
+                        <form action="/habitaciones/{{ habitacion._id}}/incidencias/{{ incidencia._id}}" method="post">
+                            <input type="hidden" name="_method" value="put">
+                            <button type="submit" class="btn btn-danger">
+                                Cerrar
+                            </button>
+                        </form>
+                    {% endif %}
+
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h4>Listado de incidencias</h4>
+        <p>No hay incidencias registradas para esta habitación.</p>
+    {% endif %}
+    <h2>Limpiezas</h2>
+    <a href="/limpiezas/nueva/{{ habitacion._id }}" class="btn btn-primary">Insertar</a>
+{% endblock %}
