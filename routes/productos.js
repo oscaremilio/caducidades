@@ -34,7 +34,7 @@ let upload = multer({ storage: storage });
 const Producto = require(__dirname + "/../models/producto.js");
 
 // Añade el servicio GET para obtener el listado completo de productos
-router.get('/productos', (req, res) => {
+router.get("/productos", (req, res) => {
     Producto.find()
     .sort("ean")
     .then(resultado => {
@@ -43,9 +43,9 @@ router.get('/productos', (req, res) => {
         res.render("error", {error: "No hay productos registrados en la aplicación"});
     });
    });
-
+/*
 // Obtiene los detalles de una habitación concreta por su id
-router.get('/productos/:id', (req, res) => {
+router.get("/productos/:id", (req, res) => {
     Producto.findById(req.params.id).then(resultado => {
         if(resultado) {
             res.status(200).send({ok: true, resultado: resultado});
@@ -55,22 +55,46 @@ router.get('/productos/:id', (req, res) => {
 }).catch (error => {
     res.status(400).send({ok: false, error: "Error buscando el producto indicado"});
     });
-});
+});*/
 
 // Añade el servicio POST para crear un producto con datos mandados en el body
-router.post('/productos', (req, res) => {
-    let nuevoProducto = new Producto({
-        ean: req.body.ean, 
-        nombre: req.body.nombre,
-        caducidad: req.body.caducidad, 
-        mascota: req.body.mascota, 
-        categoria: req.body.categoria
-    });
-    nuevoProducto.save().then(resultado => {
-        res.status(200).send({ok: true, resultado: resultado});
-    }).catch(error => { 
-        res.status(400).send({ok: false, error: "Error añadiendo producto"});
-    });
+router.post("/productos", upload.single("imagen"), async (req, res) => {
+    let productoExiste = await Producto.findOne({ean: req.body.ean});
+    if (productoExiste) {
+        let errores = {general: "Ya existe un producto con este EAN"};
+            res.render("productos_nueva", {errores: errores, datos: req.body});
+        console.log(productoExiste);
+    } else {
+        let imagen = req.file ? req.file.filename : "";
+        let nuevoProducto = new Producto({
+            ean: req.body.ean, 
+            nombre: req.body.nombre,
+            caducidad: req.body.caducidad, 
+            mascota: req.body.mascota, 
+            categoria: req.body.categoria,
+            imagen: imagen
+        });
+        nuevoProducto.save().then(resultado => {
+            res.redirect("/productos");
+        }).catch(error => {
+            let errores = {
+                general: "Error insertando producto"
+            };
+            if(error.errors.ean) {
+                errores.ean = error.errors.ean.message;
+            }
+            if(error.errors.nombre) {
+                errores.nombre = error.errors.nombre.message;
+            }
+            if(error.errors.mascota) {
+                errores.mascota = error.errors.mascota.message;
+            }
+            if(error.errors.categoria) {
+                errores.categoria = error.errors.categoria.message;
+            }
+            res.render("productos_nueva", {errores: errores, datos: req.body});
+        });
+    }
 });
 
 router.put('/productos/:id', (req, res) => {
@@ -139,7 +163,6 @@ router.post("/productos/editar/:id", upload.single("imagen"), (req, res) => {
             errores.categoria = error.errors.categoria.message;
         }
         res.render("productos_nueva", {errores: errores, datos: req.body});
-
     });
 });
 

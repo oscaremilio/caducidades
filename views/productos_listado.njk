@@ -15,7 +15,8 @@
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 <h5 class="card-title">EAN: {{ producto.ean }}</h5>
-                                <p class="card-text"> : Nombre: {{ producto.nombre }}</p>
+                                <p class="card-text">Nombre: {{ producto.nombre }}</p>
+                                <p class="card-text">caducidad: {{ producto.caducidad |  date('DD-MM-YYYY') }}</p>
                                 <a href="/productos/{{ producto.ean }}"" class="btn btn-primary">Ver ficha</a>
                             </div>
                         </div>

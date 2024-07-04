@@ -14,36 +14,49 @@
                 {% if errores.ean %}
                     <br> <span class="text-danger">{{ errores.ean }}</span><br>
                 {% endif %}
-                <input type="string" class="form-control" name="ean"
-                placeholder="EAN de producto..." value = {{ datos.ean}}>
+                <input required type="text" class="form-control" name="ean"
+                placeholder="EAN de producto..." value = {{ datos.ean }} >
         </div>
         <div class="form-group">
-            <label>Tipo:</label>
-            {% if errores.tipo %}
-                    <br> <span class="text-danger">{{ errores.tipo }}</span><br>
+            <label>Mascota:</label>
+            {% if errores.mascota %}
+                    <br> <span class="text-danger">{{ errores.mascota }}</span><br>
                 {% endif %}
-            <select class="form-control" name="tipo" value = {{ datos.tipo}}>
-                <option selected>- Selecione el tipo de habitación -</option>
-                <option>individual</option>
-                <option>doble</option>
-                <option>familiar</option>
-                <option>suite</option>
+            <select class="form-control" name="mascota" value= {{ datos.mascota}}>
+                <option selected>- Selecione el tipo de mascota -</option>
+                <option>gato</option>
+                <option>roedores</option>
+                <option>aves</option>
+                <option>peces</option>
+                <option>perro</option>
             </select>
         </div>
         <div class="form-group">
-            <label>Precio:</label>
-                {% if errores.precio %}
-                    <br> <span class="text-danger">{{ errores.precio }}</span><br>
+            <label>Categoria:</label>
+            {% if errores.categoria %}
+                    <br> <span class="text-danger">{{ errores.categoria }}</span><br>
                 {% endif %}
-                <input type="number" step="0.01" class="form-control" name="precio"
-                placeholder="Precio de la habitación..." value = {{ datos.precio }}>
+            <select class="form-control" name="categoria" value= {{ datos.categoria}}>
+                <option selected>- Selecione la categoria de comida -</option>
+                <option>seco</option>
+                <option>húmedo</option>
+                <option>higiene</option>
+                <option>snack</option>
+            </select>
         </div>
         <div class="form-group">
-            <label>Descripción:</label>
-                {% if errores.descripcion %}
-                    <br> <span class="text-danger">{{ errores.descripcion }}</span><br>
+            <label>Fecha de caducidad:</label>
+            {% if errores.caducidad %}
+                <br> <span class="text-danger">{{ errores.caducidad }}</span><br>
+            {% endif %}
+            <input type="date" class="form-control" name="caducidad" value="{{ datos.caducidad | date('YYYY-MM-DD') }}" required>
+        </div>
+        <div class="form-group">
+            <label>Nombre:</label>
+                {% if errores.nombre %}
+                    <br> <span class="text-danger">{{ errores.nombre }}</span><br>
                 {% endif %}
-              <textarea class="form-control" name="descripcion" rows="10" cols="50">{{ datos.descripcion}}</textarea>
+                <input type="text" class="form-control" name="nombre" value="{{ datos.nombre }}" required>
         </div>
         <div class="form-group">
             <label>Imagen:</label>

@@ -83,7 +83,7 @@
                 {% if errores.nombre %}
                     <br> <span class="text-danger">{{ errores.nombre }}</span><br>
                 {% endif %}
-                <textarea class="form-control" name="nombre" rows="10" cols="50">{{ producto.nombre}}</textarea>
+                <input type="text" class="form-control" name="nombre" value=" {{ producto.nombre }}">
         </div>
         <div class="form-group">
             <label>Imagen:</label>
