@@ -36,6 +36,7 @@ let productoSchema = new mongoose.Schema({
     },
     imagen: {
         type: String,
+        match: [/^p_.+/, "Recuerda poner la foto preparada"],
         trim: true
     }
 });

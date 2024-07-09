@@ -1,0 +1,39 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Productos | Ficha{% endblock %}
+
+{% block contenido %}
+
+    <h1> {{ producto.nombre }}</h1>
+    {% if producto.imagen %}
+        <div class="text-center">
+            <img src="/uploads/productos/{{ producto.imagen }}" class="img-fluid" alt="Imagen del producto {{ producto.ean }}" width="320" height="240">
+        </div>
+    {% endif %}
+    <p><strong>EAN: {{ producto.ean }}</strong></p>
+    <p><strong>Nombre: {{ producto.nombre }} </strong></p>
+    <p> Mascota: {{ producto.mascota }}</p>
+    <p> Categoria: {{ producto.categoria }}</p>
+    <p> Caducidad: {{ producto.caducidad | date("DD/MM/YYYY") }}</p>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 p-1">
+                <form action="/productos/{{ producto._id}}" method="post">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="btn btn-danger">
+                    Borrar producto
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6 p-1">
+                <form action="/productos/editar/{{ producto._id }}" method="get">
+                <input type="hidden" name="_method">
+                    <button type="submit" class="btn btn-warning">
+                    Editar producto
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

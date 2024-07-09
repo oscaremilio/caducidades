@@ -8,7 +8,7 @@
     {% endif %}
     <h1>Modificar producto {{ producto.ean}}</h1>
     
-    <form action="/producto/editar/{{ producto._id }}" method="post" enctype="multipart/form-data">
+    <form action="/productos/editar/{{ producto._id }}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label>EAN de producto:</label>
                 {% if errores.ean %}
