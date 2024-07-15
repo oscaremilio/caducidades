@@ -1,5 +1,6 @@
 // Añade los módulos necesarios
 const express = require("express");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const nunjucks = require('nunjucks');
 const methodOverride = require("method-override");
