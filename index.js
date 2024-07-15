@@ -9,6 +9,21 @@ const dateFilter = require("nunjucks-date-filter");
 // Crea la instancia de Express
 let app = express();
 
+// Configura la sesión dentro de la aplicación Express
+app.use(session(
+    {
+        secret: "confianza",
+        resave: true,
+        saveUninitialized: false
+    }
+));
+
+// Usuarios cargados en un array
+const usuarios = [
+    {usuario: "oscar", password: "confianza"},
+    {usuario: "cristina", password: "carrefour"}
+];
+
 // Uso de urlencoded (antes de methodOverride siempre)
 app.use(express.urlencoded({ extended: true }));
 
