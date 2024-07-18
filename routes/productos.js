@@ -7,12 +7,23 @@ que comiencen por "/productos"
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const autenticacion = require(__dirname + "/../index");
 
 // Enrutador
 const router = express.Router();
 
 // Expresión regular para asegurar la carpeta se añade la imagen subida
 const regex_producto = /^p_.+/;
+
+// Comprueba si un usuario validado tiene el rol para acceder al recurso
+let rol = (rol) => {
+    return (req, res, next) => {
+        if (rol === req.session.rol)
+            next();
+        else
+            res.render('login');
+    }
+}
 
 // Configura los parámetros de subida de archivos y almacenamiento
 let storage = multer.diskStorage({
@@ -34,7 +45,7 @@ let upload = multer({ storage: storage });
 const Producto = require(__dirname + "/../models/producto.js");
 
 // Añade el servicio GET para obtener el listado completo de productos
-router.get("/productos", (req, res) => {
+router.get("/productos", autenticacion, (req, res) => {
     Producto.find()
         .sort("caducidad")
         .then(resultado => {
@@ -44,8 +55,8 @@ router.get("/productos", (req, res) => {
         });
 });
 
-// Añade el servicio para renderizar un formulario de un libro y actualizarlo
-router.get("/productos/editar/:id", (req, res) => {
+// Añade el servicio para renderizar un formulario de un producto y actualizarlo
+router.get("/productos/editar/:id", autenticacion, (req, res) => {
     //res.render("productos_edicion");
     Producto.findById(req.params.id).then(resultado => {
         if (resultado) {
@@ -58,26 +69,26 @@ router.get("/productos/editar/:id", (req, res) => {
     });
 });
 
-// Crea un servicio GET que renderiza el formulario que crea una habitación
-router.get("/productos/nueva", (req, res) => {
+// Crea un servicio GET que renderiza el formulario que crea un producto
+router.get("/productos/nueva", autenticacion, rol('admin'), (req, res) => {
     res.render("productos_nueva");
 });
 
-// Obtiene los detalles de una habitación concreta por su id
+// Obtiene los detalles de un producto concreto por su id
 router.get("/productos/:id", (req, res) => {
     Producto.findById(req.params.id).then(resultado => {
-        if(resultado) {
-            res.render("productos_ficha", {producto: resultado});
+        if (resultado) {
+            res.render("productos_ficha", { producto: resultado });
         } else {
-            res.render("error", {error: "Producto no encontrado"});
+            res.render("error", { error: "Producto no encontrado" });
         }
-}).catch (error => {
-    res.render("error", {error: "No existe el EAN del producto"})
+    }).catch(error => {
+        res.render("error", { error: "No existe el EAN del producto" })
     });
 });
 
 // Añade el servicio POST para crear un producto con datos mandados en el body
-router.post("/productos", upload.single("imagen"), async (req, res) => {
+router.post("/productos", upload.single("imagen"), autenticacion, async (req, res) => {
     let productoExiste = await Producto.findOne({ ean: req.body.ean });
     if (productoExiste) {
         let errores = { general: "Ya existe un producto con este EAN" };
@@ -116,9 +127,9 @@ router.post("/productos", upload.single("imagen"), async (req, res) => {
     }
 });
 
-// Actualiza los datos de una habitación
-router.post("/productos/editar/:id", upload.single("imagen"), (req, res) => {
-    let imagen = req.file ? req.file.filename :Producto.imagen;
+// Actualiza los datos de un producto
+router.post("/productos/editar/:id", upload.single("imagen"), autenticacion, rol('admin'), (req, res) => {
+    let imagen = req.file ? req.file.filename : Producto.imagen;
     Producto.findByIdAndUpdate(req.params.id, {
         $set: {
             ean: req.body.ean,
@@ -151,16 +162,16 @@ router.post("/productos/editar/:id", upload.single("imagen"), (req, res) => {
 });
 
 // Añade el servicio DELETE que borra un producto gracias a su id
-router.delete('/productos/:id', (req, res) => {
+router.delete('/productos/:id', autenticacion, rol('admin'), (req, res) => {
 
     let idProducto = req.params.id;
 
     Producto.findByIdAndDelete(req.params.id)
         .then(resultado => {
             res.redirect("/productos");
-    }).catch(error => {
-        res.render("error", {error: "Error eliminando producto" });
-    });
+        }).catch(error => {
+            res.render("error", { error: "Error eliminando producto" });
+        });
 });
 
 /*
@@ -186,11 +197,5 @@ router.put('/productos/:id', (req, res) => {
     });
 });
 */
-
-
-
-
-
-
 
 module.exports = router;

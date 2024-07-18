@@ -2,5 +2,10 @@
     <ul class="nav">
         <li class="nav-item"><a class="btn btn-dark m-2" href="/productos">Productos</a></li>
         <li class="nav-item"><a class="btn btn-dark m-2" href="/productos/nueva">Nuevo producto</a></li>
+        {% if (session and session.usuario) %}
+            <li class="nav-item"><a class="btn btn-dark m-2" href="/logout">Logout</a></li>
+        {% else %}
+            <li class="nav-item"><a class="btn btn-dark m-2" href="/login">Login</a></li>
+        {% endif %}
     </ul>
 </nav>
