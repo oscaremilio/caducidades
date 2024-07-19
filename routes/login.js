@@ -1,13 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const router = express.Router();
 
+const Usuario = require(__dirname + "/../models/usuario");
+
+/*
 // Usuarios cargados en un array
 const usuarios = [
     { usuario: "oscar", password: "oscar2424", rol: "admin" },
     { usuario: "cristina", password: "carrefour", rol: "normal"}
-];
+];*/
 
+/*
 // Añade el servicio POST para recoger las credenciales del usuario
 router.post('/login', (req, res) => {
     let login = req.body.login;
@@ -21,6 +26,44 @@ router.post('/login', (req, res) => {
     } else {
         res.render('login',
             { error: "Usuario o contraseña incorrectos" });
+    }
+});*/
+
+// Servicio GET que renderiza el formulario de registro
+router.get("/registro", (req, res) => {
+    res.render("registro");
+});
+
+// Servicio POST para registrar un nuevo usuario
+router.post('/registro', async (req, res) => {
+    try {
+        let hashedPassword = await bcrypt.hash(req.body.password, 10);
+        let nuevoUsuario = new Usuario({
+            usuario: req.body.usuario,
+            password: hashedPassword,
+            rol: req.body.rol
+        });
+        await nuevoUsuario.save();
+        res.render('login', { message: "Usuario registrado exitosamente" });
+    } catch (error) {
+        res.render("registro", { error: "Error registrando usuario" });
+    }
+});
+
+// Añade el servicio POST para recoger las credenciales del usuario
+router.post('/login', async (req, res) => {
+    try {
+        let usuario = await Usuario.findOne({ usuario: req.body.login });
+        if (usuario && await bcrypt.compare(req.body.password, usuario.password)) {
+            req.session.usuario = usuario.usuario;
+            req.session.rol = usuario.rol;
+            res.redirect("/productos");
+        } else {
+            res.render('login',
+                { error: "Usuario o contraseña incorrectos" });
+        }
+    } catch (error) {
+        res.render('login', { error: "Error en la autenticación" });
     }
 });
 

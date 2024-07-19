@@ -18,10 +18,11 @@ const regex_producto = /^p_.+/;
 // Comprueba si un usuario validado tiene el rol para acceder al recurso
 let rol = (rol) => {
     return (req, res, next) => {
-        if (rol === req.session.rol)
-            next();
-        else
-            res.render('login');
+        if (req.session && req.session.rol === rol && req.session.usuario) {
+            return next();
+        } else {
+            res.render('login', {error: "No tienes permisos para acceder a esta ruta"});
+        }
     }
 }
 
@@ -41,8 +42,8 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage });
 
 // Incorpora los modelos de datos
-// Añade limpieza.js para el servicio put("/habitaciones/:id/ultimalimpieza"
 const Producto = require(__dirname + "/../models/producto.js");
+const Usuario = require(__dirname + "/../models/usuario.js");
 
 // Añade el servicio GET para obtener el listado completo de productos
 router.get("/productos", autenticacion, (req, res) => {
@@ -70,7 +71,7 @@ router.get("/productos/editar/:id", autenticacion, (req, res) => {
 });
 
 // Crea un servicio GET que renderiza el formulario que crea un producto
-router.get("/productos/nueva", autenticacion, rol('admin'), (req, res) => {
+router.get("/productos/nueva", autenticacion, rol("admin"), (req, res) => {
     res.render("productos_nueva");
 });
 
@@ -128,7 +129,7 @@ router.post("/productos", upload.single("imagen"), autenticacion, async (req, re
 });
 
 // Actualiza los datos de un producto
-router.post("/productos/editar/:id", upload.single("imagen"), autenticacion, rol('admin'), (req, res) => {
+router.post("/productos/editar/:id", upload.single("imagen"), autenticacion, rol("admin"), (req, res) => {
     let imagen = req.file ? req.file.filename : Producto.imagen;
     Producto.findByIdAndUpdate(req.params.id, {
         $set: {
@@ -162,7 +163,7 @@ router.post("/productos/editar/:id", upload.single("imagen"), autenticacion, rol
 });
 
 // Añade el servicio DELETE que borra un producto gracias a su id
-router.delete('/productos/:id', autenticacion, rol('admin'), (req, res) => {
+router.delete('/productos/:id', autenticacion, rol("admin"), (req, res) => {
 
     let idProducto = req.params.id;
 

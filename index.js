@@ -8,10 +8,13 @@ const dateFilter = require("nunjucks-date-filter");
 
 // Comprueba si hay algún usuario en sesión, sino enviará a la página de login
 let autenticacion = (req, res, next) => {
-    if (req.session && req.session.usuario)
+    if (req.session && req.session.usuario) {
         return next();
-    else
+    }
+    else {
         res.render('login');
+    }
+
 };
 
 module.exports = autenticacion;
