@@ -35,7 +35,7 @@ router.get("/registro", (req, res) => {
 });
 
 // Servicio POST para registrar un nuevo usuario
-router.post('/registro', async (req, res) => {
+router.post('/registro', autenticacion, async (req, res) => {
     try {
         let hashedPassword = await bcrypt.hash(req.body.password, 10);
         let nuevoUsuario = new Usuario({
