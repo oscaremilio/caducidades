@@ -8,8 +8,8 @@ const Usuario = require(__dirname + "/../models/usuario");
 /*
 // Usuarios cargados en un array
 const usuarios = [
-    { usuario: "oscar", password: "oscar2424", rol: "admin" },
-    { usuario: "cristina", password: "carrefour", rol: "normal"}
+    { usuario: "nombre", password: "password", rol: "admin" },
+    { usuario: "nombre2", password: "password2", rol: "normal"}
 ];*/
 
 /*
